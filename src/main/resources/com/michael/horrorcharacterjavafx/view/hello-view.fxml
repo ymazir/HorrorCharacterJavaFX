@@ -1,15 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.michael.horrorcharacterjavafx.controller.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane id="mainAnchorPane" fx:id="sceneOneMainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.horrorcharacterjavafx.controller.PrimaryController">
+   <children>
+      <TableView fx:id="mainTableView" layoutX="19.0" layoutY="14.0" prefHeight="519.0" prefWidth="763.0">
+        <columns>
+          <TableColumn fx:id="nameTableColumn" prefWidth="151.0" text="Name" />
+          <TableColumn fx:id="healthTableColumn" prefWidth="167.0" text="Health" />
+            <TableColumn fx:id="vulnerabilitiesTableColumn" prefWidth="235.0" text="Vulnerabilities" />
+            <TableColumn fx:id="dateofbirthTableColumn" prefWidth="209.0" text="DOB" />
+        </columns>
+      </TableView>
+      <HBox fx:id="mainHBox" alignment="CENTER" layoutX="19.0" layoutY="548.0" prefHeight="131.0" prefWidth="763.0" spacing="10.0">
+         <children>
+            <VBox fx:id="createVBox" alignment="CENTER" prefHeight="131.0" prefWidth="140.0">
+               <children>
+                  <Label fx:id="createentryLabel" alignment="CENTER" prefHeight="20.0" prefWidth="66.0" text="Name" />
+                  <TextField prefHeight="40.0" prefWidth="145.0" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="131.0" prefWidth="140.0">
+               <children>
+                  <Label alignment="CENTER" text="Health" />
+                  <TextField prefHeight="40.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Vulnerabilities" />
+                  <CheckBox mnemonicParsing="false" text="Fire" />
+                  <CheckBox mnemonicParsing="false" text="Sunlight" />
+                  <CheckBox mnemonicParsing="false" text="Silver" />
+                  <CheckBox mnemonicParsing="false" text="Holyl Water" />
+                  <CheckBox mnemonicParsing="false" text="Poison" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Date Of Birth" />
+                  <DatePicker />
+               </children>
+            </VBox>
+            <Button fx:id="createentryButton" mnemonicParsing="false" text="Create Entry" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
