@@ -1,5 +1,7 @@
 package com.michael.horrorcharacterjavafx.model;
 
+import java.time.LocalDate;
+
 public class Zombie extends HorrorCharacter {
 
 
@@ -11,7 +13,7 @@ public class Zombie extends HorrorCharacter {
      *               Zombies are vulnerable to FIRE, SUNLIGHT, and HOLY_WATER by default.
      */
     public Zombie(String name, int health) {
-        super(name, health, new Vulnerability[]{Vulnerability.FIRE, Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER});
+        super(name, health, new Vulnerability[]{Vulnerability.FIRE, Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER}, LocalDate.of(0001, 1, 1));
     }
 
     /**

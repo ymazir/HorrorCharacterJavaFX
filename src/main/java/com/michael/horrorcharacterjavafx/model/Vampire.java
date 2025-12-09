@@ -1,5 +1,7 @@
 package com.michael.horrorcharacterjavafx.model;
 
+import java.time.LocalDate;
+
 public class Vampire extends HorrorCharacter implements Transformable {
     /**
      * Indicates whether the vampire is transformed into a bat or not.
@@ -14,7 +16,7 @@ public class Vampire extends HorrorCharacter implements Transformable {
      * Vampires are vulnerable to SUNLIGHT, HOLY_WATER, and POISON by default.
      */
     public Vampire(String name, int health) {
-        super(name, health, new Vulnerability[]{Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER, Vulnerability.POISON});
+        super(name, health, new Vulnerability[]{Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER, Vulnerability.POISON}, LocalDate.of(0001, 1, 1));
     }
 
     /**

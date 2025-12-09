@@ -1,5 +1,7 @@
 package com.michael.horrorcharacterjavafx.model;
 
+import java.time.LocalDate;
+
 public class HorrorCharacter {
 
     /**
@@ -11,6 +13,7 @@ public class HorrorCharacter {
     private String name;
     private int health = 100;
     private Vulnerability[] vulnerabilities;
+    private LocalDate dateOfBirth;
 
 
     /**
@@ -19,10 +22,11 @@ public class HorrorCharacter {
      * @param health HorrorCharacters health
      * @param vulnerabilities HorrorCharacters vulnerabilities
      */
-    public HorrorCharacter(String name, int health, Vulnerability[] vulnerabilities) {
+    public HorrorCharacter(String name, int health, Vulnerability[] vulnerabilities, LocalDate dateOfBirth) {
         this.name = name;
         this.health = health;
         this.vulnerabilities = vulnerabilities;
+        this.dateOfBirth = dateOfBirth;
     }
 
 
@@ -59,6 +63,14 @@ public class HorrorCharacter {
     }
 
     /**
+     * Get the date of birth of the character.
+     * @return the date of birth of the character
+     */
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    /**
      * Get the vulnerabilities of the character.
      * @return the vulnerabilities of the character
      */
@@ -80,6 +92,14 @@ public class HorrorCharacter {
      */
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    /**
+     * Set the date of birth of the character.
+     * @param dateOfBirth the date of birth to set
+     */
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     /**

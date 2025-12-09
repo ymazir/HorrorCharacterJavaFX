@@ -1,5 +1,7 @@
 package com.michael.horrorcharacterjavafx.model;
 
+import java.time.LocalDate;
+
 public class Werewolf extends HorrorCharacter implements Transformable{
 
     /**
@@ -14,7 +16,7 @@ public class Werewolf extends HorrorCharacter implements Transformable{
      * Werewolves are vulnerable to FIRE, SILVER, HOLY_WATER, and POISON by default.
      */
     public Werewolf(String name, int health) {
-        super(name, health, new Vulnerability[] {Vulnerability.FIRE, Vulnerability.SILVER, Vulnerability.HOLY_WATER, Vulnerability.POISON});
+        super(name, health, new Vulnerability[] {Vulnerability.FIRE, Vulnerability.SILVER, Vulnerability.HOLY_WATER, Vulnerability.POISON}, LocalDate.of(0001, 1, 1));
 
     }
 

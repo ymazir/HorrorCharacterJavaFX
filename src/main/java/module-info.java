@@ -7,4 +7,5 @@ module com.michael.horrorcharacterjavafx {
     exports com.michael.horrorcharacterjavafx;
     exports com.michael.horrorcharacterjavafx.controller;
     opens com.michael.horrorcharacterjavafx.controller to javafx.fxml;
+    opens com.michael.horrorcharacterjavafx.model to javafx.base;
 }
