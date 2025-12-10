@@ -1,3 +1,4 @@
 package com.michael.horrorcharacterjavafx.model;
- public record HorrorCharacterEntry(String type, String name, int health, Vulnerability[] vulnerabilities, String dateOfBirth) {}
+
+public record HorrorCharacterEntry(int pid, String name, int health, String vulnerabilities, String dateOfBirth, String subtype) {}
 

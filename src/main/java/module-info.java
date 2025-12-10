@@ -1,6 +1,7 @@
 module com.michael.horrorcharacterjavafx {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens com.michael.horrorcharacterjavafx to javafx.fxml;

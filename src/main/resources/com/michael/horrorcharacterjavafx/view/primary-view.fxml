@@ -62,8 +62,8 @@
             <VBox fx:id="finalButtonsVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <Button fx:id="createEntryButton" mnemonicParsing="false" onAction="#CreateEntryButtonOnAction" text="Create Entry" />
-                  <Button fx:id="deleteEntryButton" mnemonicParsing="false" text="Delete Entry" />
-                  <Button fx:id="updateEntryButton" mnemonicParsing="false" text="Update Entry" />
+                  <Button fx:id="deleteEntryButton" mnemonicParsing="false" onAction="#DeleteEntryButtonOnAction" text="Delete Entry" />
+                  <Button fx:id="updateEntryButton" mnemonicParsing="false" onAction="#UpdateEntryButtonOnAction" text="Update Entry" />
                </children>
             </VBox>
          </children>
