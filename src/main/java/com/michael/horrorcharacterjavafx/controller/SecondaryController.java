@@ -1,5 +1,6 @@
 package com.michael.horrorcharacterjavafx.controller;
 
+import com.michael.horrorcharacterjavafx.Main;
 import com.michael.horrorcharacterjavafx.model.AppState;
 import com.michael.horrorcharacterjavafx.model.HorrorCharacter;
 import com.michael.horrorcharacterjavafx.model.Vulnerability;
@@ -21,6 +22,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class SecondaryController {
@@ -44,16 +48,21 @@ public class SecondaryController {
     private Button updatePageFinalUpdateButton;
 
     private HorrorCharacter curr = AppState.getSelectedCharacter();
+    private HorrorCharacter updatedCurr = AppState.getUpdatedSelectedCharacter();
 
     public void handleUpdatePageFinalUpdateButtonAction() throws IOException {
 
         // Logic to handle the update action
         if (curr != null) {
+            updatedCurr = curr;
+            String ogName = curr.getName();
+            int ogHealth = curr.getHealth();
             String name = null, subtype = null, healthText = null;
             LocalDate dateOfBirth = null;
             Vulnerability[] vulnerabilities;
             boolean valid = true;
 
+            // Getting name
             if (!updatePageNameTextField.getText().isBlank()) {
                 name = updatePageNameTextField.getText();
             } else {
@@ -61,6 +70,7 @@ public class SecondaryController {
                 valid = false;
             }
 
+            // Getting health
             try {
                 Integer.parseInt(updatePageHealthTextField.getText());
                 if (!updatePageHealthTextField.getText().isBlank()) {
@@ -74,6 +84,7 @@ public class SecondaryController {
                 valid = false;
             }
 
+            // Getting date of birth
             if (updatePageDobDatePicker.getValue() != null) {
                 dateOfBirth = updatePageDobDatePicker.getValue();
             } else {
@@ -81,6 +92,7 @@ public class SecondaryController {
                 valid = false;
             }
 
+            // Getting subtype
             if (updatePageSubtypeComboBox.getValue() != null) {
                 subtype = updatePageSubtypeComboBox.getValue();
             } else {
@@ -89,6 +101,7 @@ public class SecondaryController {
             }
 
 
+            // Getting vulnerabilities
             ObservableList<Vulnerability> vulnerabilitiesList = FXCollections.observableArrayList();
             if (updatePageVulnerabilitiesFireRadioButton.isSelected()) {
                 vulnerabilitiesList.add(Vulnerability.FIRE);
@@ -108,22 +121,28 @@ public class SecondaryController {
             vulnerabilities = vulnerabilitiesList.toArray(new Vulnerability[0]);
 
 
+            // Checking validity and updating the character
             if (valid) {
                 int health = Integer.parseInt(healthText);
-                curr.setName(name);
-                curr.setHealth(health);
-                curr.setDateOfBirth(dateOfBirth);
-                curr.setVulnerabilities(vulnerabilities);
-                AppState.setUpdatedSelectedCharacter(curr);
-                infoLabel.setText("Character updated successfully.");
-                AppState.safeToSwitch = true;
+                updatedCurr = AppState.getSelectedCharacter();
+                updatedCurr.setName(name);
+                updatedCurr.setHealth(health);
+                updatedCurr.setDateOfBirth(dateOfBirth);
+                updatedCurr.setVulnerabilities(vulnerabilities);
 
 
+                // Update the database entry
+                if (ogName.equalsIgnoreCase(updatePageNameTextField.getText().trim())) {
+                    Main.executeCustomQuery("UPDATE horrorcharacters SET name = '" + name + "', health = " + updatedCurr.getHealth() + ", dateofbirth = '" + updatedCurr.getDateOfBirth() + "', vulnerabilities = '" + updatedCurr.getVulnerabilitiesAsString() + "', subtype = '" + subtype + "' WHERE name = '" + curr.getName() + "';");
+                } else if (ogHealth == Integer.parseInt(updatePageHealthTextField.getText().trim())) {
+                    Main.executeCustomQuery("UPDATE horrorcharacters SET name = '" + updatedCurr.getName() + "', health = " + ogHealth + ", dateofbirth = '" + updatedCurr.getDateOfBirth() + "', vulnerabilities = '" + updatedCurr.getVulnerabilitiesAsString() + "', subtype = '" + subtype + "' WHERE health = '" + curr.getHealth() + "';");
+                } else {
+                    System.out.println("Cannot update both name and health in the same update.");
+                    infoLabel.setText("Error, you cannot change both name and health in the same update.");
+                }
 
 
-
-
-
+                // Loading and setting the primary view scene onto the stage.
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/michael/horrorcharacterjavafx/view/primary-view.fxml"));
                 Parent root = loader.load();
                 Scene secondaryScene = new Scene(root);
@@ -131,16 +150,17 @@ public class SecondaryController {
                 primaryStage.setScene(secondaryScene);
             }
         }
-
-
-
     }
 
-
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
+     */
     @FXML
     public void initialize() {
         infoLabel.setText(" ");
 
+        // Auto populate the fields with the current character's data.
         if (curr != null) {
             updatePageNameTextField.setText(curr.getName());
             updatePageHealthTextField.setText(String.valueOf(curr.getHealth()));

@@ -4,20 +4,10 @@ import com.michael.horrorcharacterjavafx.Main;
 import com.michael.horrorcharacterjavafx.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -25,15 +15,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller class for the primary view of the Horror Character Manager application.
+ */
 public class PrimaryController {
 
+    /** FXML UI components */
 
     @FXML
     private AnchorPane sceneOneMainAnchorPane;
@@ -80,40 +72,17 @@ public class PrimaryController {
     @FXML
     private TableColumn<HorrorCharacter, Vulnerability[]> vulnerabilitiesTableColumn;
 
+    /** Observable list to hold HorrorCharacter items */
+    private ObservableList<HorrorCharacter> items = FXCollections.observableArrayList();
 
-    ObservableList<HorrorCharacter> items = FXCollections.observableArrayList();
-
-
-//    @FXML
-//    public void sendDataToSecondary(ActionEvent e) throws IOException {
-//        HorrorCharacter selectedCharacter = mainTableView.getSelectionModel().getSelectedItem();
-//
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/michael/horrorcharacterjavafx/view/secondary-view.fxml"));
-//        root = loader.load();
-//        SecondaryController sc = loader.getController();
-//        sc.handleUpdatePageFinalUpdateButtonAction();
-//
-//        stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-
-
-
-
-
-
-
-
-
-
+    /** Handles the action of creating a new HorrorCharacter entry. */
     public void CreateEntryButtonOnAction() {
         String name = null, subtype = null, healthText = null;
         LocalDate dateOfBirth = null;
         Vulnerability[] vulnerabilities;
         boolean valid = true;
 
+        // Validate and retrieve name
         if (!createEntryNameTextField.getText().isBlank()) {
             name = createEntryNameTextField.getText();
         } else {
@@ -121,6 +90,7 @@ public class PrimaryController {
             valid = false;
         }
 
+        // Validate and retrieve health
         try {
             Integer.parseInt(createHealthTextField.getText());
             if (!createHealthTextField.getText().isBlank()) {
@@ -134,13 +104,14 @@ public class PrimaryController {
             valid = false;
         }
 
+        // Validate and retrieve date of birth
         if (createDobDatePicker.getValue() != null) {
             dateOfBirth = createDobDatePicker.getValue();
         } else {
             infoLabel.setText("Date of Birth is required.");
             valid = false;
         }
-
+        // Validate and retrieve subtype
         if (createSubtypeComboBox.getValue() != null) {
             subtype = createSubtypeComboBox.getValue();
         } else {
@@ -148,6 +119,7 @@ public class PrimaryController {
             valid = false;
         }
 
+        // Retrieve vulnerabilities
         ObservableList<Vulnerability> vulnerabilitiesList = FXCollections.observableArrayList();
         if (createVulnerabilitiesFireRadioButton.isSelected()) {
             vulnerabilitiesList.add(Vulnerability.FIRE);
@@ -166,6 +138,7 @@ public class PrimaryController {
         }
         vulnerabilities = vulnerabilitiesList.toArray(new Vulnerability[0]);
 
+        // If all inputs are valid, create the new HorrorCharacter
         if (valid) {
             int health = Integer.parseInt(healthText);
             HorrorCharacter newCharacter;
@@ -178,87 +151,77 @@ public class PrimaryController {
                     return;
                 }
             }
-            Main.executeCustomQuery("INSERT INTO horrorcharacters (name, health, vulnerabilities, dateofbirth, subtype) VALUES ('" +
-                    name + "', " +
-                    health + ", '" +
-                    Arrays.stream(vulnerabilities).map(Vulnerability::toString).collect(Collectors.joining(", ")) + "', '" +
-                    dateOfBirth.toString() + "', '" +
-                    subtype + "');");
-            mainTableView.getItems().add(newCharacter);
+            // Insert the new character into the database
+            Main.executeCustomQuery("INSERT INTO horrorcharacters (name, health, vulnerabilities, dateofbirth, subtype) VALUES ('" + name + "', " + health + ", '" + Arrays.stream(vulnerabilities).map(Vulnerability::toString).collect(Collectors.joining(", ")) + "', '" + dateOfBirth.toString() + "', '" + subtype + "');");
+            mainTableView.getItems().add(newCharacter); // Client side add just in case the tableview doesn't get updated from db
 
             infoLabel.setText("Created new " + subtype + ": " + name + "!");
         }
     }
 
+    /** Handles the action of deleting a selected HorrorCharacter entry. */
     public void DeleteEntryButtonOnAction() {
+        // Get the selected character from the table view
         HorrorCharacter selectedCharacter = mainTableView.getSelectionModel().getSelectedItem();
         if (selectedCharacter != null) {
+            // Delete the character from the database
             Main.executeCustomQuery("DELETE FROM horrorcharacters WHERE name = '" + selectedCharacter.getName() + "';");
-            mainTableView.getItems().remove(selectedCharacter);
+            mainTableView.getItems().remove(selectedCharacter); // Again client side just in case the change is not immediately shown in the tableview
             infoLabel.setText("Deleted " + selectedCharacter.getName() + " from the list.");
         } else {
             infoLabel.setText("No character selected for deletion.");
         }
     }
 
-
+    /**
+     * Handles the action of updating a selected HorrorCharacter entry.
+     * Loads the secondary view for updating the character.
+     * @throws IOException if the FXML file cannot be loaded
+     */
     public void UpdateEntryButtonOnAction() throws IOException {
+        // Get the selected character from the table view
         HorrorCharacter selectedCharacter = mainTableView.getSelectionModel().getSelectedItem();
         if (selectedCharacter != null) {
+            // Store the selected character in AppState for access in the secondary view
             AppState.setSelectedCharacter(selectedCharacter);
-            //mainTableView.getItems().remove(selectedCharacter);
+            System.out.println("added selected char to appstate");
 
-
+            // Load the secondary view for managing the entire update process
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/michael/horrorcharacterjavafx/view/secondary-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
-            //stage.setTitle("Horror Character Manager");
             Stage primaryStage = (Stage) sceneOneMainAnchorPane.getScene().getWindow();
             primaryStage.setScene(scene);
             primaryStage.show();
-
-            //FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/michael/horrorcharacterjavafx/view/secondary-view.fxml"));
-            //Parent root = loader.load();
-
-            //SecondaryController sc = loader.getController();
-            //sc.handleUpdatePageFinalUpdateButtonAction();
-
-            //Scene secondaryScene = new Scene(root);
-
-           // primaryStage.setScene(secondaryScene);
         } else {
             infoLabel.setText("No character selected for update.");
         }
-
-
-            // Remove the old item
-
-            //mainTableView.getItems().remove(selectedCharacter);
-            // Add the updated item
-            mainTableView.getItems().add(AppState.getUpdatedSelectedCharacter());
-
-            // Reset the safeToSwitch flag
-            AppState.safeToSwitch = false;
-
     }
 
 
 
 
+    /** Initializes the controller class. This method is automatically called after the FXML file has been loaded. */
     @FXML
     public void initialize() {
         infoLabel.setText(" ");
-        mainTableView.refresh();
-        List<HorrorCharacterEntry> entries = Main.getHorrorCharacterEntries();
-
+        // This is to populate the comboBox with its options (subtypes)
+        ObservableList<String> subtypeOptions = FXCollections.observableArrayList(
+                "Vampire",
+                "Werewolf",
+                "Zombie"
+        );
+        createSubtypeComboBox.setItems(subtypeOptions);
+        mainTableView.refresh(); // This does absultuly nothing from what I gather but cant hurt to have
+        List<HorrorCharacterEntry> entries = Main.getHorrorCharacterEntries(); // Get entries that were brought from db
             for (HorrorCharacterEntry e : entries) {
                 String name = e.name();
                 int health = e.health();
-                LocalDate dateOfBirth = LocalDate.parse((CharSequence) e.dateOfBirth());
-                Vulnerability[] vulnerabilities = Arrays.stream(e.vulnerabilities().split(", "))
-                        .map(String::trim)
-                        .map(Vulnerability::valueOf)
-                        .toArray(Vulnerability[]::new);
-                HorrorCharacter character;
+                LocalDate dateOfBirth = LocalDate.parse((CharSequence) e.dateOfBirth()); // Parse dateOfBirth from String to LocalDate
+                Vulnerability[] vulnerabilities = Arrays.stream(e.vulnerabilities().split(", "))  // Split the vulnerabilities string into an array
+                        .map(String::trim)                                                              // Trim whitespace
+                        .map(Vulnerability::valueOf)                                                    // Convert each string to a Vulnerability enum
+                        .toArray(Vulnerability[]::new);                                                 // Collect into an array of vulnerabilities
+                HorrorCharacter character; // Temporary variable to hold the created character to later be set to a new character object
                 switch (e.subtype()) {
                     case "Vampire" -> character = new Vampire(name, health, vulnerabilities, dateOfBirth);
                     case "Werewolf" -> character = new Werewolf(name, health, vulnerabilities, dateOfBirth);
@@ -268,97 +231,47 @@ public class PrimaryController {
                         continue; // Skip unknown subtypes
                     }
                 }
-                items.add(character);
+                items.add(character); // Add the created character to the observable list
             }
             mainTableView.setItems(items);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Example data for the TableView
-       // ObservableList<HorrorCharacter> data = FXCollections.observableArrayList(
-       //         new Vampire("Vampire bob", 80, new Vulnerability[]{Vulnerability.SUNLIGHT, Vulnerability.SILVER}, LocalDate.of(1800, 1, 1)),
-       //         new Zombie("Zombie mike", 50, new Vulnerability[]{Vulnerability.FIRE}, LocalDate.of(2000, 5, 15)),
-        //        new Werewolf("jon", 100, new Vulnerability[]{Vulnerability.SILVER}, LocalDate.of(1900, 10, 31))
-        //);
-
         // Set up the columns to display the data
-        nameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        healthTableColumn.setCellValueFactory(new PropertyValueFactory<>("health"));
-        subtypeTableColumn.setCellValueFactory(cellData -> {
-            HorrorCharacter character = cellData.getValue();
+        nameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name")); // Set CellValueFactory for name
+        healthTableColumn.setCellValueFactory(new PropertyValueFactory<>("health")); // Set CellValueFactory for health
+        subtypeTableColumn.setCellValueFactory(cellData -> {                                                // Custom CellValueFactory for subtype
+            HorrorCharacter character = cellData.getValue();                                                // Get the HorrorCharacter object
             // Return the class name as a String
-            return new javafx.beans.property.SimpleStringProperty(character.getClass().getSimpleName());
+            return new javafx.beans.property.SimpleStringProperty(character.getClass().getSimpleName());    // Return the class name
         });  // side note spent 2 hours debugging because the "T" in subtype was capitalized.
-        dateofbirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth")); // Set CellValueFactory
+        dateofbirthTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth")); // Set CellValueFactory for dateOfBirth
 
-        // Custom rendering for dateofbirthTableColumn
-        dateofbirthTableColumn.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+        dateofbirthTableColumn.setCellFactory(column -> new javafx.scene.control.TableCell<>() { // Custom CellFactory for dateOfBirth
             @Override
-            protected void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                if (empty || date == null) {
-                    setText(null);
+            protected void updateItem(LocalDate date, boolean empty) {                                // Override updateItem method
+                super.updateItem(date, empty);                                                       // Call super method
+                if (empty || date == null) {                                                        // If empty or date is null
+                    setText(null);                                                                 // Set text to null
                 } else {
-                    // Format LocalDate to a string (e.g., dd-MM-yyyy)
-                    setText(date.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    setText(date.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))); // Format date as year-month-day
                 }
             }
         });
 
-        vulnerabilitiesTableColumn.setCellValueFactory(new PropertyValueFactory<>("vulnerabilities"));
-        vulnerabilitiesTableColumn.setCellFactory(column -> new javafx.scene.control.TableCell<>() {
+        vulnerabilitiesTableColumn.setCellValueFactory(new PropertyValueFactory<>("vulnerabilities")); // Set CellValueFactory for vulnerabilities
+        vulnerabilitiesTableColumn.setCellFactory(column -> new javafx.scene.control.TableCell<>() {  // Custom CellFactory for vulnerabilities
             @Override
-            protected void updateItem(Vulnerability[] vulnerabilities, boolean empty) {
-                super.updateItem(vulnerabilities, empty);
-                if (empty || vulnerabilities == null) {
+            protected void updateItem(Vulnerability[] vulnerabilities, boolean empty) { // Override updateItem method
+                super.updateItem(vulnerabilities, empty); // Call super method
+                if (empty || vulnerabilities == null) {  // If empty or vulnerabilities is null
                     setText(null);
-                } else {
-                    // Convert Vulnerability[] to a comma-separated string
-                    String vulnerabilitiesString = Arrays.stream(vulnerabilities)
-                            .map(Vulnerability::toString)
-                            .collect(Collectors.joining(", "));
+                } else {             // Else, join the vulnerabilities into a comma-separated string
+                    String vulnerabilitiesString = Arrays.stream(vulnerabilities) // Stream the vulnerabilities array
+                            .map(Vulnerability::toString)                        // Map each vulnerability to its string representation
+                            .collect(Collectors.joining(", "));         // Join them with a comma and space
                     setText(vulnerabilitiesString);
                 }
             }
         });
-
-        //mainTableView.setItems(data);
-
-
-        ObservableList<String> subtypeOptions = FXCollections.observableArrayList(
-                "Vampire",
-                "Werewolf",
-                "Zombie"
-        );
-
-        createSubtypeComboBox.setItems(subtypeOptions);
     }
-
 }

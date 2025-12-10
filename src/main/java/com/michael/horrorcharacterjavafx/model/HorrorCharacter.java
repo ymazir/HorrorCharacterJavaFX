@@ -9,6 +9,7 @@ public class HorrorCharacter {
      * String name - name of the character
      * int health - health of the character
      * Vulnerability[] vulnerabilities - array of vulnerabilities of the character
+     * LocalDate dateOfBirth - date of birth of the character
      */
     private String name;
     private int health = 100;
@@ -121,6 +122,17 @@ public class HorrorCharacter {
         for (Vulnerability v : vulnerabilities) {
             complete = complete + v + " ";
 
+        }
+        return complete;
+    }
+    /**
+     * Get vulnerabilities as a string.
+     * @return vulnerabilities as a string
+     */
+    public String getVulnerabilitiesAsString() {
+        String complete = "";
+        for (Vulnerability v : vulnerabilities) {
+            complete = complete + v + ", ";
         }
         return complete;
     }
