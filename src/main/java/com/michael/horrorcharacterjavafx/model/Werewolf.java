@@ -10,13 +10,15 @@ public class Werewolf extends HorrorCharacter implements Transformable{
     private boolean transformed = false;
 
     /**
-     * Constructor for Werewolf.
-     * @param name Werewolf's name
-     * @param health Werewolf's health
-     * Werewolves are vulnerable to FIRE, SILVER, HOLY_WATER, and POISON by default.
+     * Constructor for HorrorCharacter.
+     *
+     * @param name            HorrorCharacters name
+     * @param health          HorrorCharacters health
+     * @param vulnerabilities Array of Vulnerabilities of the Werewolf
+     * @param dateOfBirth     Date of Birth of the Werewolf
      */
-    public Werewolf(String name, int health) {
-        super(name, health, new Vulnerability[] {Vulnerability.FIRE, Vulnerability.SILVER, Vulnerability.HOLY_WATER, Vulnerability.POISON}, LocalDate.of(0001, 1, 1));
+    public Werewolf(String name, int health, Vulnerability[] vulnerabilities, LocalDate dateOfBirth) {
+        super(name, health, vulnerabilities, dateOfBirth);
 
     }
 

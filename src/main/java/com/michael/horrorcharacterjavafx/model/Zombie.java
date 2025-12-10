@@ -5,15 +5,15 @@ import java.time.LocalDate;
 public class Zombie extends HorrorCharacter {
 
 
-    /**
-     * Constructor for HorrorCharacter.
+    /**     * Constructor for Zombie class.
      *
-     * @param name   HorrorCharacters name
-     * @param health HorrorCharacters health
-     *               Zombies are vulnerable to FIRE, SUNLIGHT, and HOLY_WATER by default.
+     * @param name            Name of the Zombie
+     * @param health          Health of the Zombie
+     * @param vulnerabilities Array of Vulnerabilities of the Zombie
+     * @param dateOfBirth     Date of Birth of the Zombie
      */
-    public Zombie(String name, int health) {
-        super(name, health, new Vulnerability[]{Vulnerability.FIRE, Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER}, LocalDate.of(0001, 1, 1));
+    public Zombie(String name, int health, Vulnerability[] vulnerabilities, LocalDate dateOfBirth) {
+        super(name, health, vulnerabilities, dateOfBirth);
     }
 
     /**

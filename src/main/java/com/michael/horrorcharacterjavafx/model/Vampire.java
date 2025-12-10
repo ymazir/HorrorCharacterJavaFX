@@ -13,10 +13,11 @@ public class Vampire extends HorrorCharacter implements Transformable {
      *
      * @param name            HorrorCharacters name
      * @param health          HorrorCharacters health
-     * Vampires are vulnerable to SUNLIGHT, HOLY_WATER, and POISON by default.
+     * @param vulnerabilities Array of Vulnerabilities of the Vampire
+     * @param dateOfBirth     Date of Birth of the Vampire
      */
-    public Vampire(String name, int health) {
-        super(name, health, new Vulnerability[]{Vulnerability.SUNLIGHT, Vulnerability.HOLY_WATER, Vulnerability.POISON}, LocalDate.of(0001, 1, 1));
+    public Vampire(String name, int health, Vulnerability[] vulnerabilities, LocalDate dateOfBirth) {
+        super(name, health, vulnerabilities, dateOfBirth);
     }
 
     /**

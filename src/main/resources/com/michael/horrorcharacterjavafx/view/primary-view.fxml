@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="mainAnchorPane" fx:id="sceneOneMainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.michael.horrorcharacterjavafx.controller.PrimaryController">
+   <children>
+      <TableView fx:id="mainTableView" layoutX="19.0" layoutY="14.0" prefHeight="519.0" prefWidth="763.0">
+        <columns>
+          <TableColumn fx:id="nameTableColumn" prefWidth="118.0" text="Name" />
+          <TableColumn fx:id="healthTableColumn" prefWidth="116.0" text="Health" />
+           <TableColumn fx:id="vulnerabilitiesTableColumn" prefWidth="290.0" text="Vulnerabilities" />
+           <TableColumn fx:id="dateofbirthTableColumn" prefWidth="79.0" text="DOB" />
+           <TableColumn fx:id="subtypeTableColumn" prefWidth="159.0" text="Subtype" />
+        </columns>
+      </TableView>
+      <HBox fx:id="createHBox" alignment="CENTER" layoutX="19.0" layoutY="548.0" prefHeight="131.0" prefWidth="763.0" spacing="10.0">
+         <children>
+            <VBox fx:id="createNameVBox" alignment="CENTER" prefHeight="131.0" prefWidth="140.0">
+               <children>
+                  <Label fx:id="createentryLabel" alignment="CENTER" prefHeight="20.0" prefWidth="66.0" text="Name" />
+                  <TextField fx:id="createEntryNameTextField" prefHeight="40.0" prefWidth="145.0" />
+               </children>
+            </VBox>
+            <VBox fx:id="createHealthVBox" alignment="CENTER" prefHeight="131.0" prefWidth="140.0">
+               <children>
+                  <Label fx:id="createHealthLabel" alignment="CENTER" text="Health" />
+                  <TextField fx:id="createHealthTextField" prefHeight="40.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+            <VBox fx:id="createVulnerabilitiesVBox" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="createVulnerabilitiesLabel" text="Vulnerabilities" />
+                  <RadioButton fx:id="createVulnerabilitiesPoisonRadioButton" mnemonicParsing="false" text="Poison" />
+                  <RadioButton fx:id="createVulnerabilitiesFireRadioButton" mnemonicParsing="false" text="Fire" />
+                  <RadioButton fx:id="createVulnerabilitiesSunlightRadioButton" mnemonicParsing="false" text="Sunlight" />
+                  <RadioButton fx:id="createVulnerabilitiesHolyWaterRadioButton" mnemonicParsing="false" text="Holy Water" />
+                  <RadioButton fx:id="createVulnerabilitiesSilverRadioButton" mnemonicParsing="false" text="Silver" />
+               </children>
+            </VBox>
+            <VBox fx:id="createDobVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="createDobLabel" text="Date Of Birth" />
+                  <DatePicker fx:id="createDobDatePicker" />
+               </children>
+            </VBox>
+            <VBox fx:id="createSubtypeVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="createSubtypeLabel" text="Subtype" />
+                  <ComboBox fx:id="createSubtypeComboBox" editable="true" prefWidth="150.0" promptText="Select subtype" visibleRowCount="3" />
+               </children>
+            </VBox>
+            <VBox fx:id="finalButtonsVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <Button fx:id="createEntryButton" mnemonicParsing="false" onAction="#CreateEntryButtonOnAction" text="Create Entry" />
+                  <Button fx:id="deleteEntryButton" mnemonicParsing="false" text="Delete Entry" />
+                  <Button fx:id="updateEntryButton" mnemonicParsing="false" text="Update Entry" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Label fx:id="infoLabel" layoutX="386.0" layoutY="678.0" text="infoLabel" />
+   </children>
+</AnchorPane>
